@@ -43,7 +43,7 @@ namespace lambertcs
 			return LAMBERT_YS[(int)lambertZone];
 		}
 
-		private Zone lambertZone;
+		public Zone lambertZone{ get; private set;}
 
 	}
 }
