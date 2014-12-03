@@ -1,4 +1,5 @@
 ﻿using System;
+using NUnit.Framework;
 
 namespace lambertcs
 {
@@ -91,14 +92,16 @@ namespace lambertcs
 			return pt;
 		}
 
-		public static Point convertToWGS84(Point org, LambertZone zone){
+		public static Point convertToWGS84(Point org, Zone zone){
 
-			if(zone.lambertZone == Zone.Lambert93)
+			var lzone = new LambertZone (zone);
+
+			if(zone == Zone.Lambert93)
 			{
-				return lambertToGeographic(org,new LambertZone(Zone.Lambert93),LambertZone.LON_MERID_IERS,LambertZone.E_WGS84,LambertZone.DEFAULT_EPS);
+				return lambertToGeographic(org,lzone,LambertZone.LON_MERID_IERS,LambertZone.E_WGS84,LambertZone.DEFAULT_EPS);
 			}
 			else {
-				Point pt1 =  lambertToGeographic(org, zone, LambertZone.LON_MERID_PARIS, LambertZone.E_CLARK_IGN, LambertZone.DEFAULT_EPS);
+				Point pt1 =  lambertToGeographic(org, lzone, LambertZone.LON_MERID_PARIS, LambertZone.E_CLARK_IGN, LambertZone.DEFAULT_EPS);
 
 				Point pt2 = geographicToCartesian(pt1.x, pt1.y, pt1.z, LambertZone.A_CLARK_IGN, LambertZone.E_CLARK_IGN);
 
@@ -109,19 +112,28 @@ namespace lambertcs
 			}
 		}
 
-		public static Point convertToWGS84(double x, double y, LambertZone zone){
+		public static Point convertToWGS84(double x, double y, Zone zone){
 
 			Point pt = new Point(x,y,0);
 			return convertToWGS84(pt, zone);
 		}
 
-		public static Point convertToWGS84Deg(double x, double y, LambertZone zone){
+		public static Point convertToWGS84Deg(double x, double y, Zone zone){
 
 			Point pt = new Point(x,y,0);
-			pt.unit = Unit.Degree;
+			pt = convertToWGS84 (pt, zone);
+			pt.toDegree();
 			return pt;
-		}
 
+
+		}
+			
+		[Test]
+		public void TestBug(){
+			Point pt = Lambert.convertToWGS84Deg(668832.5384, 6950138.7285,Zone.Lambert93);
+			Assert.AreEqual(2.56865,pt.x,0.0001);
+			Assert.AreEqual(49.64961,pt.y,0.0001);
+		}
 	}
 }
 
