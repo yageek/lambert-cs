@@ -7,6 +7,6 @@ A simple C# library to convert Lambert Coordinates to GPS WGS84 coordinates base
 # Usage
 
 ```cs
-	Point pt = Lambert.convertToWGS84Deg(668832.5384, 6950138.7285, Zone.Lambert93);
- 	Console.WriteLine("Point latitude:{0} longitude:{1}", pt.y, pt.x);
+Point pt = Lambert.convertToWGS84Deg(668832.5384, 6950138.7285, Zone.Lambert93);
+Console.WriteLine("Point latitude:{0} longitude:{1}", pt.y, pt.x);
 ```
